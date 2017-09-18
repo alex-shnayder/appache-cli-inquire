@@ -27,5 +27,8 @@
   },
   "peerDependencies": {
     "appache": "^0.1.0"
+  },
+  "dependencies": {
+    "inquirer": "^3.2.3"
   }
 }
