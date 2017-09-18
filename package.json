@@ -1,0 +1,31 @@
+{
+  "name": "appache-cli-inquire",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Alex Shnayder <alex@shnayder.pro>",
+  "repository": "alex-shnayder/appache-cli-inquire",
+  "homepage": "https://github.com/alex-shnayder/appache-cli-inquire#readme",
+  "bugs": "https://github.com/alex-shnayder/appache-cli-inquire/issues",
+  "license": "ISC",
+  "scripts": {
+    "precommit": "lint-staged",
+    "test": "mocha src/**/tests/*.js"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "main": "src/index.js",
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-plugin-import": "^2.2.0",
+    "husky": "^0.13.3",
+    "lint-staged": "^3.4.0",
+    "mocha": "^3.5.0"
+  },
+  "peerDependencies": {
+    "appache": "^0.1.0"
+  }
+}
