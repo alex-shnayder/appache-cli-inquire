@@ -70,7 +70,10 @@ module.exports = function* cliInquirePlugin() {
   })
 
   yield hookStart('process', function* (config, command) {
-    command = yield* processCommand(command)
+    if (this.source.interface && this.source.interface.includes('cli')) {
+      command = yield* processCommand(command)
+    }
+
     return yield next(config, command)
   })
 }
