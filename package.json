@@ -26,9 +26,9 @@
     "mocha": "^3.5.0"
   },
   "peerDependencies": {
-    "appache": "^0.2.0"
+    "appache": "^0.3.0"
   },
   "dependencies": {
-    "inquirer": "^3.2.3"
+    "inquirer": "^3.3.0"
   }
 }
