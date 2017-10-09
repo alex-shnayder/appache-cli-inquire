@@ -1,5 +1,5 @@
 const prompt = require('inquirer').createPromptModule()
-const { preHook, hookStart, next } = require('appache/effects')
+const { preHook, hook, next } = require('appache/effects')
 const modifySchema = require('./modifySchema')
 
 
@@ -69,7 +69,11 @@ module.exports = function* cliInquirePlugin() {
     return [schema]
   })
 
-  yield hookStart('process', function* (config, command) {
+  yield hook({
+    event: 'process',
+    goesBefore: ['owner:basicTypesPlugin'],
+    goesAfter: ['owner:defaultValuesPlugin'],
+  }, function* (config, command) {
     if (this.source.interface && this.source.interface.includes('cli')) {
       command = yield* processCommand(command)
     }
