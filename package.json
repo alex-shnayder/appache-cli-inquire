@@ -3,9 +3,9 @@
   "version": "0.2.0",
   "description": "",
   "author": "Alex Shnayder <alex@shnayder.pro>",
-  "repository": "alex-shnayder/appache-cli-inquire",
-  "homepage": "https://github.com/alex-shnayder/appache-cli-inquire#readme",
-  "bugs": "https://github.com/alex-shnayder/appache-cli-inquire/issues",
+  "repository": "appache/appache-cli-inquire",
+  "homepage": "https://github.com/appache/appache-cli-inquire#readme",
+  "bugs": "https://github.com/appache/appache-cli-inquire/issues",
   "license": "ISC",
   "scripts": {
     "precommit": "lint-staged"
