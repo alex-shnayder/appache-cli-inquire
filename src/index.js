@@ -1,83 +1,33 @@
-const prompt = require('inquirer').createPromptModule()
 const { preHook } = require('appache/effects')
 const modifySchema = require('./modifySchema')
+const inquire = require('./inquire')
 
 
-function findOption(options, id) {
-  return options && options.find((option) => {
-    return option.config && option.config.id === id
-  })
+function schematizeHandler(schema) {
+  schema = modifySchema(schema)
+  return [schema]
 }
 
-function* inquire(option) {
-  let { name, description, inquire } = option
-  let endChar, message, type
-
-  if (option.type === 'boolean') {
-    type = 'confirm'
-    endChar = '?'
-  } else {
-    type = 'input'
-    endChar = ':'
+function* executeHandler(config, batch) {
+  if (
+    (!this.interface || !this.interface.includes('cli')) &&
+    (!this.source.interface || !this.source.interface.includes('cli'))
+  ) {
+    return
   }
 
-  if (typeof inquire === 'string') {
-    message = inquire
-  } else if (description) {
-    message = description + endChar
-  } else {
-    message = name[0].toUpperCase() + name.substr(1) + endChar
-  }
-
-  let question = { name, type, message }
-  let answer = yield prompt(question)
-  return answer[name]
+  batch = yield* inquire(config, batch)
+  return [config, batch]
 }
 
-function* processCommand(command) {
-  let { config, options } = command
-
-  if (!config || !config.options || !config.options.length) {
-    return command
-  }
-
-  options = options.slice()
-
-  for (let i = 0; i < config.options.length; i++) {
-    let option = config.options[i]
-
-    if (!option.inquire || findOption(options, option.id)) {
-      continue
-    }
-
-    let value = yield* inquire(option)
-
-    options.push({
-      value,
-      name: option.name,
-      inputName: option.name,
-      config: option,
-    })
-  }
-
-  return Object.assign({}, command, { options })
-}
 
 module.exports = function* cliInquirePlugin() {
-  yield preHook('schema', (schema) => {
-    schema = modifySchema(schema)
-    return [schema]
-  })
+  yield preHook('schematize', schematizeHandler)
 
   yield preHook({
-    event: 'process',
-    goesBefore: ['owner:basicTypesPlugin'],
-    goesAfter: ['owner:defaultValuesPlugin'],
-  }, function* (config, command) {
-    if (this.source.interface && this.source.interface.includes('cli')) {
-      command = yield* processCommand(command)
-    }
-
-    return [config, command]
-  })
+    event: 'execute',
+    tags: ['addOption'],
+    goesAfter: ['identifyCommand'],
+    goesBefore: ['addOption'],
+  }, executeHandler)
 }
